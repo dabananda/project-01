@@ -1,0 +1,145 @@
+<div class="mx-auto">
+  <div class="bg-white shadow-md rounded">
+    <div class="py-4 flex justify-end items-center px-4">
+      <div>
+        <select
+          class="border-1 rounded py-2 px-2 ms-2"
+          (change)="filterGender($any($event.target).value)"
+        >
+          <option value="">All Genders</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Others">Others</option>
+        </select>
+
+        <select
+          class="border-1 rounded py-2 px-2 ms-2"
+          (change)="filterMarital($any($event.target).value)"
+        >
+          <option value="">All Marital Status</option>
+          <option value="Single">Single</option>
+          <option value="Married">Married</option>
+          <option value="Divorced">Divorced</option>
+        </select>
+
+        <select
+          class="border-1 rounded py-2 px-2 ms-2"
+          (change)="filterGraduated($any($event.target).value)"
+        >
+          <option value="">All</option>
+          <option value="true">Graduated</option>
+          <option value="false">Not Graduated</option>
+        </select>
+
+        <label for="search"></label>
+        <input
+          class="border-1 rounded py-2 px-2"
+          id="search"
+          type="text"
+          (input)="search($any($event.target).value)"
+          placeholder="Search by name"
+        />
+      </div>
+      <div>
+        <a class="px-2 py-2 border-1 rounded ms-2 bg-green-400" routerLink="/create"
+          >Create Person</a
+        >
+      </div>
+    </div>
+    @if (loading()) {
+      <p role="status">Loading...</p>
+    }
+    <table class="text-left w-full border-collapse">
+      <thead>
+        <tr>
+          <th
+            class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
+          >
+            Name
+          </th>
+          <th
+            class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
+          >
+            DOB
+          </th>
+          <th
+            class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
+          >
+            Gender
+          </th>
+          <th
+            class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
+          >
+            Height
+          </th>
+          <th
+            class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
+          >
+            Weight
+          </th>
+          <th
+            class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
+          >
+            Marital Status
+          </th>
+          <th
+            class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
+          >
+            Graduated
+          </th>
+          <th
+            class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
+          >
+            Action
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of persons(); track p.id) {
+          <tr class="hover:bg-grey-lighter">
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.name }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.dateOfBirth }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.gender }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.heightInFeet }} feet</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.weightInKg }} kg</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.maritalStatus }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">
+              {{ p.isGraduated == true ? 'Yes' : 'No' }}
+            </td>
+            <td class="py-4 px-6 border-b border-grey-light">
+              <a
+                [routerLink]="['/edit', p.id]"
+                class="text-grey-lighter font-bold py-2 px-3 rounded text-xs bg-blue-500 text-white cursor-pointer me-2"
+                >Edit</a
+              >
+              <button
+                (click)="delete(p.id)"
+                class="text-grey-lighter font-bold py-2 px-3 rounded text-xs bg-red-500 text-white cursor-pointer"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pt-4 pb-8 flex justify-center">
+      <button
+        (click)="prevPage()"
+        [disabled]="pageNumber() === 1"
+        class="text-grey-lighter font-bold py-2 px-3 rounded text-xs bg-red-500 text-white cursor-pointer mt-2"
+      >
+        Previous
+      </button>
+      <button class="px-2 rounded mx-1 bg-gray-200">{{ pageNumber() }}</button>
+      <button
+        (click)="nextPage()"
+        [disabled]="!hasMoreData()"
+        class="text-grey-lighter font-bold py-1 px-3 rounded text-xs bg-red-500 text-white cursor-pointer mt-2"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>
