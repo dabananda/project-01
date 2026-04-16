@@ -1,4 +1,4 @@
-﻿using FirstProject.DTOs.Data;
+﻿using FirstProject.DTOs;
 using FirstProject.Models;
 using FirstProject.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
