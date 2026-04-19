@@ -1,5 +1,4 @@
 ﻿using FirstProject.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FirstProject.Repositories.Interfaces
 {
