@@ -1,6 +1,6 @@
 ﻿namespace DTO.Response
 {
-    public class GetPersonDataResponse
+    public class PersonDataResponse
     {
         public int PersonId { get; set; }
         public string PersonName { get; set; }
