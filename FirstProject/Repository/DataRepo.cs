@@ -1,4 +1,5 @@
-﻿using FirstProject.Data;
+﻿using Aggregator.Enums;
+using FirstProject.Data;
 using FirstProject.Models;
 using FirstProject.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +42,7 @@ namespace FirstProject.Repositories
             }
         }
 
-        public async Task<List<PersonData>> GetAllDataAsync(string? name, string? gender, string? maritalStatus, bool? isGraduated, int pageNumber, int pageSize)
+        public async Task<List<PersonData>> GetAllDataAsync(string? name, Gender? gender, MaritalStatus? maritalStatus, bool? isGraduated, int pageNumber, int pageSize)
         {
             try
             {
@@ -52,12 +53,12 @@ namespace FirstProject.Repositories
                     datas = datas.Where(x => x.Name.Contains(name));
                 }
 
-                if (!string.IsNullOrEmpty(gender))
+                if (gender.HasValue)
                 {
                     datas = datas.Where(x => x.Gender == gender);
                 }
 
-                if (!string.IsNullOrEmpty(maritalStatus))
+                if (maritalStatus.HasValue)
                 {
                     datas = datas.Where(x => x.MaritalStatus == maritalStatus);
                 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aggregator.Enums;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace FirstProject.Models
@@ -23,10 +24,10 @@ namespace FirstProject.Models
         public decimal WeightInKg { get; set; }
 
         [Required]
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
 
         [Required]
-        public string MaritalStatus { get; set; }
+        public MaritalStatus MaritalStatus { get; set; }
 
         [Required]
         public bool IsGraduated { get; set; }

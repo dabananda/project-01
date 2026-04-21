@@ -1,4 +1,6 @@
-﻿namespace DTO.Response
+﻿using Aggregator.Enums;
+
+namespace DTO.Response
 {
     public class PersonDataResponse
     {
@@ -7,8 +9,8 @@
         public DateOnly PersonDoB { get; set; }
         public decimal PersonHeight { get; set; }
         public decimal PersonWeight { get; set; }
-        public string PersonGender { get; set; }
-        public string PersonMaritalStatus { get; set; }
+        public Gender PersonGender { get; set; }
+        public MaritalStatus PersonMaritalStatus { get; set; }
         public bool PersonIsGraduated { get; set; }
     }
 }

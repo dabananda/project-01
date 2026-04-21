@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Aggregator.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace DTO.Request
 {
@@ -19,10 +20,12 @@ namespace DTO.Request
         [Range(1, 500, ErrorMessage = "Weight must be from 1 feet to 500 kg")]
         public decimal PersonWeight { get; set; }
         [Required(ErrorMessage = "Gender is required.")]
-        public string PersonGender { get; set; }
+        [EnumDataType(typeof(Gender), ErrorMessage = "Invalid gender value.")]
+        public Gender PersonGender { get; set; }
 
         [Required(ErrorMessage = "Marital Status is required.")]
-        public string PersonMaritalStatus { get; set; }
+        [EnumDataType(typeof(MaritalStatus), ErrorMessage = "Invalid marital status value.")]
+        public MaritalStatus PersonMaritalStatus { get; set; }
 
         [Required(ErrorMessage = "Graduation Status is required.")]
         public bool PersonIsGraduated { get; set; }

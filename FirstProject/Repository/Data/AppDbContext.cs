@@ -10,5 +10,18 @@ namespace FirstProject.Data
         }
 
         public DbSet<PersonData> PersonDatas { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PersonData>()
+                .Property(x => x.Gender)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<PersonData>()
+                .Property(x => x.MaritalStatus)
+                .HasConversion<string>();
+        }
     }
 }
