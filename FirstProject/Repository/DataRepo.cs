@@ -90,17 +90,10 @@ namespace FirstProject.Repositories
             }
         }
 
-        public async Task UpdateDataAsync(PersonData entity, UpdatePersonDataRequest dto)
+        public async Task UpdateDataAsync(PersonData entity)
         {
             try
             {
-                entity.Name = dto.PersonName;
-                entity.DateOfBirth = dto.PersonDoB;
-                entity.HeightInFeet = dto.PersonHeight;
-                entity.WeightInKg = dto.PersonWeight;
-                entity.Gender = dto.PersonGender;
-                entity.MaritalStatus = dto.PersonMaritalStatus;
-                entity.IsGraduated = dto.PersonIsGraduated;
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

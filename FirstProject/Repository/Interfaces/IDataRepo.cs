@@ -1,5 +1,4 @@
 ﻿using DTO;
-using DTO.Request;
 using FirstProject.Models;
 
 namespace FirstProject.Repositories.Interfaces
@@ -9,7 +8,7 @@ namespace FirstProject.Repositories.Interfaces
         Task<PersonData?> GetDataByIdAsync(int id);
         Task<List<PersonData>> GetAllDataAsync(PersonDataFilterDto dto);
         Task<PersonData> CreateDataAsync(PersonData data);
-        Task UpdateDataAsync(PersonData entity, UpdatePersonDataRequest dto);
+        Task UpdateDataAsync(PersonData entity);
         Task DeleteDataAsync(PersonData data);
     }
 }

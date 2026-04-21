@@ -75,10 +75,17 @@ namespace Handler
         {
             try
             {
-                var result = await _repo.GetDataByIdAsync(id);
-                if (result == null) return null;
-                await _repo.UpdateDataAsync(result, dto);
-                return PersonDataMapper.ToDto(result);
+                var entity = await _repo.GetDataByIdAsync(id);
+                if (entity == null) return null;
+                entity.Name = dto.PersonName;
+                entity.DateOfBirth = dto.PersonDoB;
+                entity.HeightInFeet = dto.PersonHeight;
+                entity.WeightInKg = dto.PersonWeight;
+                entity.Gender = dto.PersonGender;
+                entity.MaritalStatus = dto.PersonMaritalStatus;
+                entity.IsGraduated = dto.PersonIsGraduated;
+                await _repo.UpdateDataAsync(entity);
+                return PersonDataMapper.ToDto(entity);
             }
             catch (Exception ex)
             {
