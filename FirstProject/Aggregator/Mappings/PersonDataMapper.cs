@@ -13,9 +13,9 @@ namespace Aggregator.Mappings
             {
                 PersonId = data.Id,
                 PersonName = data.Name,
-                PersonDateOfBirth = data.DateOfBirth,
-                PersonHeightInFeet = data.HeightInFeet,
-                PersonWeightInKg = data.WeightInKg,
+                PersonDoB = data.DateOfBirth,
+                PersonHeight = data.HeightInFeet,
+                PersonWeight = data.WeightInKg,
                 PersonGender = data.Gender,
                 PersonMaritalStatus = data.MaritalStatus,
                 PersonIsGraduated = data.IsGraduated
@@ -34,9 +34,9 @@ namespace Aggregator.Mappings
             return new PersonData
             {
                 Name = response.PersonName,
-                DateOfBirth = response.PersonDateOfBirth,
-                HeightInFeet = response.PersonHeightInFeet,
-                WeightInKg = response.PersonWeightInKg,
+                DateOfBirth = response.PersonDoB,
+                HeightInFeet = response.PersonHeight,
+                WeightInKg = response.PersonWeight,
                 Gender = response.PersonGender,
                 MaritalStatus = response.PersonMaritalStatus,
                 IsGraduated = response.PersonIsGraduated

@@ -10,14 +10,14 @@ namespace DTO.Request
 
         [Required(ErrorMessage = "Date of birth is required")]
         [DataType(DataType.Date)]
-        public DateOnly PersonDateOfBirth { get; set; }
+        public DateOnly PersonDoB { get; set; }
         [Required(ErrorMessage = "Height is required.")]
         [Range(1, 10, ErrorMessage = "Height must be from 1 feet to 10 feet")]
-        public decimal PersonHeightInFeet { get; set; }
+        public decimal PersonHeight { get; set; }
 
         [Required(ErrorMessage = "Weight is required.")]
         [Range(1, 500, ErrorMessage = "Weight must be from 1 feet to 500 kg")]
-        public decimal PersonWeightInKg { get; set; }
+        public decimal PersonWeight { get; set; }
         [Required(ErrorMessage = "Gender is required.")]
         public string PersonGender { get; set; }
 

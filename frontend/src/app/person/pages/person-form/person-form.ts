@@ -20,9 +20,9 @@ export class PersonForm {
 
   form = this.fb.nonNullable.group({
     personName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    personDateOfBirth: ['', Validators.required],
-    personHeightInFeet: [0, [Validators.required, Validators.min(1), Validators.max(10)]],
-    personWeightInKg: [0, [Validators.required, Validators.min(1), Validators.max(500)]],
+    personDoB: ['', Validators.required],
+    personHeight: [0, [Validators.required, Validators.min(1), Validators.max(10)]],
+    personWeight: [0, [Validators.required, Validators.min(1), Validators.max(500)]],
     personGender: ['', Validators.required],
     personMaritalStatus: ['', Validators.required],
     personIsGraduated: [false, Validators.required]

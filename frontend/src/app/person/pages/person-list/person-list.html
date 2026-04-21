@@ -98,10 +98,10 @@
         @for (p of persons(); track p.personId) {
           <tr class="hover:bg-grey-lighter">
             <td class="py-4 px-6 border-b border-grey-light">{{ p.personName }}</td>
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.personDateOfBirth }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personDoB }}</td>
             <td class="py-4 px-6 border-b border-grey-light">{{ p.personGender }}</td>
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.personHeightInFeet }} feet</td>
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.personWeightInKg }} kg</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personHeight }} feet</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personWeight }} kg</td>
             <td class="py-4 px-6 border-b border-grey-light">{{ p.personMaritalStatus }}</td>
             <td class="py-4 px-6 border-b border-grey-light">
               {{ p.personIsGraduated == true ? 'Yes' : 'No' }}

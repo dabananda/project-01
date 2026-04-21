@@ -95,9 +95,9 @@ namespace FirstProject.Repositories
             try
             {
                 entity.Name = dto.PersonName;
-                entity.DateOfBirth = dto.PersonDateOfBirth;
-                entity.HeightInFeet = dto.PersonHeightInFeet;
-                entity.WeightInKg = dto.PersonWeightInKg;
+                entity.DateOfBirth = dto.PersonDoB;
+                entity.HeightInFeet = dto.PersonHeight;
+                entity.WeightInKg = dto.PersonWeight;
                 entity.Gender = dto.PersonGender;
                 entity.MaritalStatus = dto.PersonMaritalStatus;
                 entity.IsGraduated = dto.PersonIsGraduated;

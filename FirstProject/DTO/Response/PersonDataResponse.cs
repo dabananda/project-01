@@ -4,9 +4,9 @@
     {
         public int PersonId { get; set; }
         public string PersonName { get; set; }
-        public DateOnly PersonDateOfBirth { get; set; }
-        public decimal PersonHeightInFeet { get; set; }
-        public decimal PersonWeightInKg { get; set; }
+        public DateOnly PersonDoB { get; set; }
+        public decimal PersonHeight { get; set; }
+        public decimal PersonWeight { get; set; }
         public string PersonGender { get; set; }
         public string PersonMaritalStatus { get; set; }
         public bool PersonIsGraduated { get; set; }
