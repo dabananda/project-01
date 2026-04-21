@@ -1,6 +1,6 @@
-﻿using FirstProject.DTOs;
-using FirstProject.Models;
-using FirstProject.Repositories.Interfaces;
+﻿using DTO;
+using DTO.Request;
+using Handler;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FirstProject.Controllers
@@ -9,35 +9,20 @@ namespace FirstProject.Controllers
     [ApiController]
     public class DataController : ControllerBase
     {
-        private readonly IDataRepo _repo;
+        private readonly IDataHandler _dataHandler;
 
-        public DataController(IDataRepo repo)
+        public DataController(IDataHandler dataHandler)
         {
-            _repo = repo;
+            _dataHandler = dataHandler;
         }
 
         [HttpGet("GetAllPersonsData")]
-        public async Task<IActionResult> GetAllPersonsData([FromQuery] string? name, [FromQuery] string? gender, [FromQuery] string? maritalStatus, [FromQuery] bool? isGraduated, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAllPersonsData([FromQuery] PersonDataFilterDto dto)
         {
             try
             {
-                var datas = await _repo.GetAllDataAsync(name, gender, maritalStatus, isGraduated, pageNumber, pageSize);
-                var dtos = new List<PersonDataDto>();
-                foreach (var data in datas)
-                {
-                    dtos.Add(new PersonDataDto
-                    {
-                        Id = data.Id,
-                        Name = data.Name,
-                        DateOfBirth = data.DateOfBirth,
-                        HeightInFeet = data.HeightInFeet,
-                        WeightInKg = data.WeightInKg,
-                        Gender = data.Gender,
-                        MaritalStatus = data.MaritalStatus,
-                        IsGraduated = data.IsGraduated
-                    });
-                }
-                return Ok(dtos);
+                var response = await _dataHandler.GetAllPersonDataAsync(dto);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -50,23 +35,12 @@ namespace FirstProject.Controllers
         {
             try
             {
-                var data = await _repo.GetDataByIdAsync(id);
-                if (data == null)
+                var resultDto = await _dataHandler.GetPersonDataByIdAsync(id);
+                if (resultDto == null)
                 {
                     return NotFound($"Person data with id: {id} does not exist.");
                 }
-                var dto = new PersonDataDto
-                {
-                    Id = data.Id,
-                    Name = data.Name,
-                    DateOfBirth = data.DateOfBirth,
-                    HeightInFeet = data.HeightInFeet,
-                    WeightInKg = data.WeightInKg,
-                    Gender = data.Gender,
-                    MaritalStatus = data.MaritalStatus,
-                    IsGraduated = data.IsGraduated
-                };
-                return Ok(dto);
+                return Ok(resultDto);
             }
             catch (Exception ex)
             {
@@ -75,24 +49,19 @@ namespace FirstProject.Controllers
         }
 
         [HttpPost("CreatePersonData")]
-        public async Task<IActionResult> CreatePersonData([FromBody] CreatePersonDataDto dto)
+        public async Task<IActionResult> CreatePersonData([FromBody] CreatePersonDataRequest dto)
         {
             try
             {
-                var domain = new PersonData
+                if (!ModelState.IsValid)
                 {
-                    Name = dto.Name,
-                    DateOfBirth = dto.DateOfBirth,
-                    HeightInFeet = dto.HeightInFeet,
-                    WeightInKg = dto.WeightInKg,
-                    Gender = dto.Gender,
-                    MaritalStatus = dto.MaritalStatus,
-                    IsGraduated = dto.IsGraduated
-                };
-                var result = await _repo.CreateDataAsync(domain);
+                    return BadRequest();
+                }
+                var responseDto = await _dataHandler.CreatePersonDataAsync(dto);
                 return Ok(new
                 {
-                    message = "Data created successfully."
+                    message = "Data created successfully.",
+                    data = responseDto
                 });
             }
             catch (Exception ex)
@@ -102,28 +71,23 @@ namespace FirstProject.Controllers
         }
 
         [HttpPut("UpdatePersonData/{id}")]
-        public async Task<IActionResult> UpdatePersonData([FromRoute] int id, [FromBody] UpdatePersonDataDto dto)
+        public async Task<IActionResult> UpdatePersonData([FromRoute] int id, [FromBody] UpdatePersonDataRequest dto)
         {
             try
             {
-                var domain = new PersonData
+                if (!ModelState.IsValid)
                 {
-                    Name = dto.Name,
-                    DateOfBirth = dto.DateOfBirth,
-                    HeightInFeet = dto.HeightInFeet,
-                    WeightInKg = dto.WeightInKg,
-                    Gender = dto.Gender.ToString(),
-                    MaritalStatus = dto.MaritalStatus.ToString(),
-                    IsGraduated = dto.IsGraduated
-                };
-                var result = await _repo.UpdateDataAsync(id, domain);
-                if (result == null)
+                    return BadRequest();
+                }
+                var responseDto = await _dataHandler.UpdatePersonDataAsync(id, dto);
+                if (responseDto == null)
                 {
                     return NotFound($"Person data with id: {id} does not exist.");
                 }
                 return Ok(new
                 {
-                    message = "Person Data updated successfully."
+                    message = "Person Data updated successfully.",
+                    data = responseDto
                 });
             }
             catch (Exception ex)
@@ -137,8 +101,8 @@ namespace FirstProject.Controllers
         {
             try
             {
-                var result = await _repo.DeleteDataAsync(id);
-                if (result == false)
+                var response = await _dataHandler.DeletePersonDataAsync(id);
+                if (response == false)
                 {
                     return NotFound($"Person data with id: {id} does not exist.");
                 }

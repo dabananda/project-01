@@ -1,4 +1,6 @@
-﻿using FirstProject.Data;
+﻿using DTO;
+using DTO.Request;
+using FirstProject.Data;
 using FirstProject.Models;
 using FirstProject.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,68 +18,95 @@ namespace FirstProject.Repositories
 
         public async Task<PersonData> CreateDataAsync(PersonData data)
         {
-            await _context.PersonDatas.AddAsync(data);
-            await _context.SaveChangesAsync();
-            return data;
+            try
+            {
+                await _context.PersonDatas.AddAsync(data);
+                await _context.SaveChangesAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to create new person data on database", ex);
+            }
         }
 
-        public async Task<bool> DeleteDataAsync(int id)
+        public async Task DeleteDataAsync(PersonData data)
         {
-            var personData = await _context.PersonDatas.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
-            if (personData == null) return false;
-            personData.IsDeleted = true;
-            await _context.SaveChangesAsync();
-            return true;
+            try
+            {
+                data.IsDeleted = true;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to delete person data on database", ex);
+            }
         }
 
-        public async Task<List<PersonData>> GetAllDataAsync(string? name = null, string? gender = null, string? maritalStatus = null, bool? isGraduated = null, int pageNumber = 1, int pageSize = 10)
+        public async Task<List<PersonData>> GetAllDataAsync(PersonDataFilterDto dto)
         {
-            var datas = _context.PersonDatas.AsNoTracking().Where(x => x.IsDeleted == false).OrderByDescending(x => x.Id).AsQueryable();
-
-            if (!string.IsNullOrEmpty(name))
+            try
             {
-                datas = datas.Where(x => x.Name.Contains(name));
-            }
+                var datas = _context.PersonDatas.AsNoTracking().Where(x => x.IsDeleted == false).OrderByDescending(x => x.Id).AsQueryable();
 
-            if (!string.IsNullOrEmpty(gender))
+                if (!string.IsNullOrEmpty(dto.Name))
+                {
+                    datas = datas.Where(x => x.Name.Contains(dto.Name));
+                }
+
+                if (!string.IsNullOrEmpty(dto.Gender))
+                {
+                    datas = datas.Where(x => x.Gender == dto.Gender);
+                }
+
+                if (!string.IsNullOrEmpty(dto.MaritalStatus))
+                {
+                    datas = datas.Where(x => x.MaritalStatus == dto.MaritalStatus);
+                }
+
+                if (dto.IsGraduated.HasValue)
+                {
+                    datas = datas.Where(x => x.IsGraduated == dto.IsGraduated.Value);
+                }
+
+                var skipRes = (dto.PageNumber - 1) * dto.PageSize;
+                return await datas.Skip(skipRes).Take(dto.PageSize).ToListAsync();
+            }
+            catch (Exception ex)
             {
-                datas = datas.Where(x => x.Gender == gender);
+                throw new Exception("Failed to fetch person data list from database", ex);
             }
-
-            if (!string.IsNullOrEmpty(maritalStatus))
-            {
-                datas = datas.Where(x => x.MaritalStatus == maritalStatus);
-            }
-
-            if (isGraduated.HasValue)
-            {
-                datas = datas.Where(x => x.IsGraduated == isGraduated.Value);
-            }
-
-            var skipRes = (pageNumber - 1) * pageSize;
-            return await datas.Skip(skipRes).Take(pageSize).ToListAsync();
         }
 
         public async Task<PersonData?> GetDataByIdAsync(int id)
         {
-            var personData = await _context.PersonDatas.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
-            if (personData == null) return null;
-            return personData;
+            try
+            {
+                return await _context.PersonDatas.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to fetch person data from database", ex);
+            }
         }
 
-        public async Task<PersonData?> UpdateDataAsync(int id, PersonData data)
+        public async Task UpdateDataAsync(PersonData entity, UpdatePersonDataRequest dto)
         {
-            var personData = await _context.PersonDatas.FirstOrDefaultAsync(x => x.Id == id);
-            if (personData == null) return null;
-            personData.Name = data.Name;
-            personData.DateOfBirth = data.DateOfBirth;
-            personData.HeightInFeet = data.HeightInFeet;
-            personData.WeightInKg = data.WeightInKg;
-            personData.Gender = data.Gender;
-            personData.MaritalStatus = data.MaritalStatus;
-            personData.IsGraduated = data.IsGraduated;
-            await _context.SaveChangesAsync();
-            return personData;
+            try
+            {
+                entity.Name = dto.PersonName;
+                entity.DateOfBirth = dto.PersonDateOfBirth;
+                entity.HeightInFeet = dto.PersonHeightInFeet;
+                entity.WeightInKg = dto.PersonWeightInKg;
+                entity.Gender = dto.PersonGender;
+                entity.MaritalStatus = dto.PersonMaritalStatus;
+                entity.IsGraduated = dto.PersonIsGraduated;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to update person data on database", ex);
+            }
         }
     }
 }

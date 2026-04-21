@@ -1,6 +1,7 @@
 using FirstProject.Data;
 using FirstProject.Repositories;
 using FirstProject.Repositories.Interfaces;
+using Handler;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,7 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddScoped<IDataHandler, DataHandler>();
 builder.Services.AddScoped<IDataRepo, DataRepo>();
 
 var app = builder.Build();

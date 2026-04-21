@@ -1,6 +1,6 @@
 ﻿namespace DTO
 {
-    public class FilterDto
+    public class PersonDataFilterDto
     {
         public string? Name { get; set; }
         public string? Gender { get; set; }

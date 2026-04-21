@@ -1,4 +1,5 @@
-﻿using DTO.Response;
+﻿using DTO.Request;
+using DTO.Response;
 using FirstProject.Models;
 
 namespace Aggregator.Mappings
@@ -27,12 +28,11 @@ namespace Aggregator.Mappings
             return dataList.Select(data => data.ToDto()).ToList();
         }
 
-        public static PersonData ToEntity(this PersonDataResponse response)
+        public static PersonData ToEntity(this CreatePersonDataRequest response)
         {
             if (response == null) return null;
             return new PersonData
             {
-                Id = response.PersonId,
                 Name = response.PersonName,
                 DateOfBirth = response.PersonDateOfBirth,
                 HeightInFeet = response.PersonHeightInFeet,
