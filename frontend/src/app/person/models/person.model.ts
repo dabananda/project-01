@@ -1,20 +1,20 @@
 export interface Person {
-    id: number;
-    name: string;
-    dateOfBirth: string;
-    heightInFeet: number;
-    weightInKg: number;
-    gender: string;
-    maritalStatus: string;
-    isGraduated: boolean;
+  personId: number;
+  personName: string;
+  personDateOfBirth: string;
+  personHeightInFeet: number;
+  personWeightInKg: number;
+  personGender: string;
+  personMaritalStatus: string;
+  personIsGraduated: boolean;
 }
 
 export interface PersonCreateUpdate {
-    name: string;
-    dateOfBirth: string;
-    heightInFeet: number;
-    weightInKg: number;
-    gender: string;
-    maritalStatus: string;
-    isGraduated: boolean;
+  personName: string;
+  personDateOfBirth: string;
+  personHeightInFeet: number;
+  personWeightInKg: number;
+  personGender: string;
+  personMaritalStatus: string;
+  personIsGraduated: boolean;
 }

@@ -11,17 +11,17 @@
     <div class="flex justify-between">
       <div class="mb-4 w-90">
         <label class="block mb-1">Name</label>
-        <input formControlName="name" class="border p-2 w-full rounded" />
+        <input formControlName="personName" class="border p-2 w-full rounded" />
 
-        @if (form.controls.name.touched && form.controls.name.invalid) {
+        @if (form.controls.personName.touched && form.controls.personName.invalid) {
           <div class="text-red-500 text-sm mt-1">
-            @if (form.controls.name.errors?.['required']) {
+            @if (form.controls.personName.errors?.['required']) {
               <p>Name is required</p>
             }
-            @if (form.controls.name.errors?.['minlength']) {
+            @if (form.controls.personName.errors?.['minlength']) {
               <p>Minimum 2 characters required</p>
             }
-            @if (form.controls.name.errors?.['maxlength']) {
+            @if (form.controls.personName.errors?.['maxlength']) {
               <p>Maximum 100 characters allowed</p>
             }
           </div>
@@ -31,9 +31,9 @@
       <div>
         <div class="mb-4">
           <label class="block mb-1">Date of Birth</label>
-          <input type="date" formControlName="dateOfBirth" class="border p-2 w-full rounded" />
+          <input type="date" formControlName="personDateOfBirth" class="border p-2 w-full rounded" />
 
-          @if (form.controls.dateOfBirth.touched && form.controls.dateOfBirth.invalid) {
+          @if (form.controls.personDateOfBirth.touched && form.controls.personDateOfBirth.invalid) {
             <p class="text-red-500 text-sm mt-1">Date of birth is required</p>
           }
         </div>
@@ -43,17 +43,17 @@
     <div class="flex justify-between">
       <div class="mb-4 w-100">
         <label class="block mb-1">Height (feet)</label>
-        <input type="number" formControlName="heightInFeet" class="border p-2 w-full rounded" />
+        <input type="number" formControlName="personHeightInFeet" class="border p-2 w-full rounded" />
 
-        @if (form.controls.heightInFeet.touched && form.controls.heightInFeet.invalid) {
+        @if (form.controls.personHeightInFeet.touched && form.controls.personHeightInFeet.invalid) {
           <div class="text-red-500 text-sm mt-1">
-            @if (form.controls.heightInFeet.errors?.['required']) {
+            @if (form.controls.personHeightInFeet.errors?.['required']) {
               <p>Height is required</p>
             }
-            @if (form.controls.heightInFeet.errors?.['min']) {
+            @if (form.controls.personHeightInFeet.errors?.['min']) {
               <p>Minimum height is 1</p>
             }
-            @if (form.controls.heightInFeet.errors?.['max']) {
+            @if (form.controls.personHeightInFeet.errors?.['max']) {
               <p>Maximum height is 10</p>
             }
           </div>
@@ -62,17 +62,17 @@
 
       <div class="mb-4 w-100 ms-4">
         <label class="block mb-1">Weight (kg)</label>
-        <input type="number" formControlName="weightInKg" class="border p-2 w-full rounded" />
+        <input type="number" formControlName="personWeightInKg" class="border p-2 w-full rounded" />
 
-        @if (form.controls.weightInKg.touched && form.controls.weightInKg.invalid) {
+        @if (form.controls.personWeightInKg.touched && form.controls.personWeightInKg.invalid) {
           <div class="text-red-500 text-sm mt-1">
-            @if (form.controls.weightInKg.errors?.['required']) {
+            @if (form.controls.personWeightInKg.errors?.['required']) {
               <p>Weight is required</p>
             }
-            @if (form.controls.weightInKg.errors?.['min']) {
+            @if (form.controls.personWeightInKg.errors?.['min']) {
               <p>Minimum weight is 1</p>
             }
-            @if (form.controls.weightInKg.errors?.['max']) {
+            @if (form.controls.personWeightInKg.errors?.['max']) {
               <p>Maximum weight is 500</p>
             }
           </div>
@@ -86,45 +86,45 @@
 
         <div class="flex gap-4">
           <label class="flex items-center gap-2">
-            <input type="radio" formControlName="gender" value="Male" />
+            <input type="radio" formControlName="personGender" value="Male" />
             Male
           </label>
 
           <label class="flex items-center gap-2">
-            <input type="radio" formControlName="gender" value="Female" />
+            <input type="radio" formControlName="personGender" value="Female" />
             Female
           </label>
 
           <label class="flex items-center gap-2">
-            <input type="radio" formControlName="gender" value="Other" />
+            <input type="radio" formControlName="personGender" value="Other" />
             Other
           </label>
         </div>
 
-        @if (form.controls.gender.touched && form.controls.gender.invalid) {
+        @if (form.controls.personGender.touched && form.controls.personGender.invalid) {
           <p class="text-red-500 text-sm mt-1">Gender is required</p>
         }
       </div>
 
       <div class="mb-4 w-100 ms-4">
         <label class="block mb-1">Marital Status</label>
-        <select formControlName="maritalStatus" class="border p-2 w-full rounded">
+        <select formControlName="personMaritalStatus" class="border p-2 w-full rounded">
           <option value="">Select Status</option>
           <option value="Single">Single</option>
           <option value="Married">Married</option>
         </select>
 
-        @if (form.controls.maritalStatus.touched && form.controls.maritalStatus.invalid) {
+        @if (form.controls.personMaritalStatus.touched && form.controls.personMaritalStatus.invalid) {
           <p class="text-red-500 text-sm mt-1">Marital status is required</p>
         }
       </div>
     </div>
 
     <div class="mb-4 flex items-center">
-      <input type="checkbox" formControlName="isGraduated" class="mr-2" />
+      <input type="checkbox" formControlName="personIsGraduated" class="mr-2" />
       <label>Graduated</label>
 
-      @if (form.controls.isGraduated.touched && form.controls.isGraduated.invalid) {
+      @if (form.controls.personIsGraduated.touched && form.controls.personIsGraduated.invalid) {
         <p class="text-red-500 text-sm mt-1">Graduated status is required</p>
       }
     </div>

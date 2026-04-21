@@ -19,13 +19,13 @@ export class PersonForm {
   isEdit = signal(!!this.id)
 
   form = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    dateOfBirth: ['', Validators.required],
-    heightInFeet: [0, [Validators.required, Validators.min(1), Validators.max(10)]],
-    weightInKg: [0, [Validators.required, Validators.min(1), Validators.max(500)]],
-    gender: ['', Validators.required],
-    maritalStatus: ['', Validators.required],
-    isGraduated: [false, Validators.required]
+    personName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    personDateOfBirth: ['', Validators.required],
+    personHeightInFeet: [0, [Validators.required, Validators.min(1), Validators.max(10)]],
+    personWeightInKg: [0, [Validators.required, Validators.min(1), Validators.max(500)]],
+    personGender: ['', Validators.required],
+    personMaritalStatus: ['', Validators.required],
+    personIsGraduated: [false, Validators.required]
   })
 
   constructor() {

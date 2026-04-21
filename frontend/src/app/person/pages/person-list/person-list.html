@@ -95,25 +95,25 @@
         </tr>
       </thead>
       <tbody>
-        @for (p of persons(); track p.id) {
+        @for (p of persons(); track p.personId) {
           <tr class="hover:bg-grey-lighter">
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.name }}</td>
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.dateOfBirth }}</td>
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.gender }}</td>
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.heightInFeet }} feet</td>
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.weightInKg }} kg</td>
-            <td class="py-4 px-6 border-b border-grey-light">{{ p.maritalStatus }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personName }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personDateOfBirth }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personGender }}</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personHeightInFeet }} feet</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personWeightInKg }} kg</td>
+            <td class="py-4 px-6 border-b border-grey-light">{{ p.personMaritalStatus }}</td>
             <td class="py-4 px-6 border-b border-grey-light">
-              {{ p.isGraduated == true ? 'Yes' : 'No' }}
+              {{ p.personIsGraduated == true ? 'Yes' : 'No' }}
             </td>
             <td class="py-4 px-6 border-b border-grey-light">
               <a
-                [routerLink]="['/edit', p.id]"
+                [routerLink]="['/edit', p.personId]"
                 class="text-grey-lighter font-bold py-2 px-3 rounded text-xs bg-blue-500 text-white cursor-pointer me-2"
                 >Edit</a
               >
               <button
-                (click)="delete(p.id)"
+                (click)="delete(p.personId)"
                 class="text-grey-lighter font-bold py-2 px-3 rounded text-xs bg-red-500 text-white cursor-pointer"
               >
                 Delete
