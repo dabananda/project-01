@@ -48,8 +48,8 @@ namespace Handler
         {
             try
             {
-                var response = await _repo.GetAllDataAsync(dto);
-                return PersonDataMapper.ToDtoList(response);
+                var entities = await _repo.GetAllDataAsync(dto.Name, dto.Gender, dto.MaritalStatus, dto.IsGraduated, dto.PageNumber, dto.PageSize);
+                return PersonDataMapper.ToDtoList(entities);
             }
             catch (Exception ex)
             {

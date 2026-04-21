@@ -53,10 +53,6 @@ namespace FirstProject.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest();
-                }
                 var responseDto = await _dataHandler.CreatePersonDataAsync(dto);
                 return Ok(new
                 {
@@ -75,10 +71,6 @@ namespace FirstProject.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest();
-                }
                 var responseDto = await _dataHandler.UpdatePersonDataAsync(id, dto);
                 if (responseDto == null)
                 {

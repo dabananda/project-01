@@ -1,6 +1,4 @@
-﻿using DTO;
-using DTO.Request;
-using FirstProject.Data;
+﻿using FirstProject.Data;
 using FirstProject.Models;
 using FirstProject.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -43,34 +41,34 @@ namespace FirstProject.Repositories
             }
         }
 
-        public async Task<List<PersonData>> GetAllDataAsync(PersonDataFilterDto dto)
+        public async Task<List<PersonData>> GetAllDataAsync(string? name, string? gender, string? maritalStatus, bool? isGraduated, int pageNumber, int pageSize)
         {
             try
             {
                 var datas = _context.PersonDatas.AsNoTracking().Where(x => x.IsDeleted == false).OrderByDescending(x => x.Id).AsQueryable();
 
-                if (!string.IsNullOrEmpty(dto.Name))
+                if (!string.IsNullOrEmpty(name))
                 {
-                    datas = datas.Where(x => x.Name.Contains(dto.Name));
+                    datas = datas.Where(x => x.Name.Contains(name));
                 }
 
-                if (!string.IsNullOrEmpty(dto.Gender))
+                if (!string.IsNullOrEmpty(gender))
                 {
-                    datas = datas.Where(x => x.Gender == dto.Gender);
+                    datas = datas.Where(x => x.Gender == gender);
                 }
 
-                if (!string.IsNullOrEmpty(dto.MaritalStatus))
+                if (!string.IsNullOrEmpty(maritalStatus))
                 {
-                    datas = datas.Where(x => x.MaritalStatus == dto.MaritalStatus);
+                    datas = datas.Where(x => x.MaritalStatus == maritalStatus);
                 }
 
-                if (dto.IsGraduated.HasValue)
+                if (isGraduated.HasValue)
                 {
-                    datas = datas.Where(x => x.IsGraduated == dto.IsGraduated.Value);
+                    datas = datas.Where(x => x.IsGraduated == isGraduated.Value);
                 }
 
-                var skipRes = (dto.PageNumber - 1) * dto.PageSize;
-                return await datas.Skip(skipRes).Take(dto.PageSize).ToListAsync();
+                var skipRes = (pageNumber - 1) * pageSize;
+                return await datas.Skip(skipRes).Take(pageSize).ToListAsync();
             }
             catch (Exception ex)
             {
