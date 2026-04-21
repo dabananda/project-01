@@ -19,94 +19,58 @@ namespace FirstProject.Controllers
         [HttpGet("GetAllPersonsData")]
         public async Task<IActionResult> GetAllPersonsData([FromQuery] PersonDataFilterDto dto)
         {
-            try
-            {
-                var response = await _dataHandler.GetAllPersonDataAsync(dto);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while getting all person data", ex);
-            }
+            return Ok(await _dataHandler.GetAllPersonDataAsync(dto));
         }
 
         [HttpGet("GetPersonDataById/{id}")]
         public async Task<IActionResult> GetPersonDataById([FromRoute] int id)
         {
-            try
+            var resultDto = await _dataHandler.GetPersonDataByIdAsync(id);
+            if (resultDto == null)
             {
-                var resultDto = await _dataHandler.GetPersonDataByIdAsync(id);
-                if (resultDto == null)
-                {
-                    return NotFound($"Person data with id: {id} does not exist.");
-                }
-                return Ok(resultDto);
+                return NotFound($"Person data with id: {id} does not exist.");
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while getting person data", ex);
-            }
+            return Ok(resultDto);
         }
 
         [HttpPost("CreatePersonData")]
         public async Task<IActionResult> CreatePersonData([FromBody] CreatePersonDataRequest dto)
         {
-            try
+            var responseDto = await _dataHandler.CreatePersonDataAsync(dto);
+            return Ok(new
             {
-                var responseDto = await _dataHandler.CreatePersonDataAsync(dto);
-                return Ok(new
-                {
-                    message = "Data created successfully.",
-                    data = responseDto
-                });
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while creating person data", ex);
-            }
+                message = "Data created successfully.",
+                data = responseDto
+            });
         }
 
         [HttpPut("UpdatePersonData/{id}")]
         public async Task<IActionResult> UpdatePersonData([FromRoute] int id, [FromBody] UpdatePersonDataRequest dto)
         {
-            try
+            var responseDto = await _dataHandler.UpdatePersonDataAsync(id, dto);
+            if (responseDto == null)
             {
-                var responseDto = await _dataHandler.UpdatePersonDataAsync(id, dto);
-                if (responseDto == null)
-                {
-                    return NotFound($"Person data with id: {id} does not exist.");
-                }
-                return Ok(new
-                {
-                    message = "Person Data updated successfully.",
-                    data = responseDto
-                });
+                return NotFound($"Person data with id: {id} does not exist.");
             }
-            catch (Exception ex)
+            return Ok(new
             {
-                throw new Exception("Error while updaing person data", ex);
-            }
+                message = "Person Data updated successfully.",
+                data = responseDto
+            });
         }
 
         [HttpDelete("DeletePersonData/{id}")]
         public async Task<IActionResult> DeletePersonData([FromRoute] int id)
         {
-            try
+            var response = await _dataHandler.DeletePersonDataAsync(id);
+            if (response == false)
             {
-                var response = await _dataHandler.DeletePersonDataAsync(id);
-                if (response == false)
-                {
-                    return NotFound($"Person data with id: {id} does not exist.");
-                }
-                return Ok(new
-                {
-                    message = "Person data deleted successfully."
-                });
+                return NotFound($"Person data with id: {id} does not exist.");
             }
-            catch (Exception ex)
+            return Ok(new
             {
-                throw new Exception("Error while deleting person data", ex);
-            }
+                message = "Person data deleted successfully."
+            });
         }
     }
 }

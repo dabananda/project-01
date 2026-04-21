@@ -2,6 +2,7 @@ using FirstProject.Data;
 using FirstProject.Repositories;
 using FirstProject.Repositories.Interfaces;
 using Handler;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +44,20 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowCors");
+
+app.UseExceptionHandler(appError =>
+{
+    appError.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+        if (contextFeature != null)
+        {
+            await context.Response.WriteAsJsonAsync(new { error = "An unexpected error occurred." });
+        }
+    });
+});
 
 app.UseAuthorization();
 
