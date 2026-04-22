@@ -19,8 +19,6 @@ namespace API.Tests.Controllers
             _controller = new DataController(_handlerMock.Object);
         }
 
-        // GetAllPersonsData
-
         [Fact]
         public async Task GetAllPersonsData_ReturnsOkWithList()
         {
@@ -43,8 +41,6 @@ namespace API.Tests.Controllers
             Assert.Equal(list, result.Value);
         }
 
-        // GetPersonDataById
-
         [Fact]
         public async Task GetPersonDataById_ReturnsOkWithData()
         {
@@ -65,8 +61,6 @@ namespace API.Tests.Controllers
             Assert.Equal(404, result.StatusCode);
             Assert.Equal("Person data with id: 1 does not exist.", result.Value);
         }
-
-        // CreatePersonData
 
         [Fact]
         public async Task CreatePersonData_ReturnsOkWithMessage()
@@ -102,8 +96,6 @@ namespace API.Tests.Controllers
             Assert.IsType<BadRequestResult>(result);
             _handlerMock.Verify(h => h.CreatePersonDataAsync(It.IsAny<CreatePersonDataRequest>()), Times.Never);
         }
-
-        // UpdatePersonData
 
         [Fact]
         public async Task UpdatePersonData_ReturnsOkWithMessage()
@@ -146,8 +138,6 @@ namespace API.Tests.Controllers
             Assert.IsType<BadRequestResult>(result);
             _handlerMock.Verify(h => h.UpdatePersonDataAsync(It.IsAny<int>(), It.IsAny<UpdatePersonDataRequest>()), Times.Never);
         }
-
-        // DeletePersonData
 
         [Fact]
         public async Task DeletePersonData_ReturnsOkWithMessage()

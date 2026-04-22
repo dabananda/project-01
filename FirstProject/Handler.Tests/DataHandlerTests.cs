@@ -17,8 +17,6 @@ namespace Handler.Tests
             _handler = new DataHandler(_repoMock.Object);
         }
 
-        // GetAllPersonDataAsync
-
         [Fact]
         public async Task GetAllPersonDataAsync_ReturnsDataList()
         {
@@ -51,8 +49,6 @@ namespace Handler.Tests
 
             Assert.Contains("Failed to get person data list", ex.Message);
         }
-
-        // GetPersonDataByIdAsync
 
         [Fact]
         public async Task GetPersonDataByIdAsync_ReturnsData()
@@ -87,7 +83,6 @@ namespace Handler.Tests
             Assert.Contains("Failed to get person data", ex.Message);
         }
 
-        // CreatePersonDataAsync
         [Fact]
         public async Task CreatePersonDataAsync_ReturnsCreatedData()
         {
@@ -112,8 +107,6 @@ namespace Handler.Tests
 
             Assert.Contains("Failed to create person data", ex.Message);
         }
-
-        // UpdatePersonDataAsync
 
         [Fact]
         public async Task UpdatePersonDataAsync_ReturnsUpdatedData()
@@ -161,8 +154,6 @@ namespace Handler.Tests
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.UpdatePersonDataAsync(1, request));
             Assert.Contains("Failed to update person data", ex.Message);
         }
-
-        // DeletePersonDataAsync
 
         [Fact]
         public async Task DeletePersonDataAsync_ReturnsTrue()
