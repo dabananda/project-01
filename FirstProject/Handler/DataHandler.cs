@@ -82,7 +82,7 @@ namespace Handler
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Failed to upate person data", ex);
+                throw new ApplicationException("Failed to update person data", ex);
             }
         }
     }
