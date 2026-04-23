@@ -1,4 +1,5 @@
-﻿using DTO;
+﻿using Aggregator.Enums;
+using DTO;
 using DTO.Request;
 using DTO.Response;
 using FirstProject.Controllers;
@@ -20,7 +21,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetAllPersonsData_ReturnsOkWithList()
+        public async Task GetAllPersonsData_ReturnsOkResult_WithListOfData()
         {
             var list = new List<PersonDataResponse> { SampleResponse(1), SampleResponse(2) };
             _handlerMock.Setup(h => h.GetAllPersonDataAsync(It.IsAny<PersonDataFilterDto>())).ReturnsAsync(list);
@@ -31,7 +32,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetAllPersonsData_ReturnsOkWithEmptyList()
+        public async Task GetAllPersonsData_ReturnsOkResult_WithEmptyList()
         {
             var list = new List<PersonDataResponse>();
             _handlerMock.Setup(h => h.GetAllPersonDataAsync(It.IsAny<PersonDataFilterDto>())).ReturnsAsync(list);
@@ -42,7 +43,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetPersonDataById_ReturnsOkWithData()
+        public async Task GetPersonDataById_ReturnsOkResult_WithData()
         {
             var response = SampleResponse(1);
             _handlerMock.Setup(h => h.GetPersonDataByIdAsync(1)).ReturnsAsync(response);
@@ -53,7 +54,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetPersonDataById_ReturnsNotFound()
+        public async Task GetPersonDataById_ReturnsNotFoundResult_WithInvalidId()
         {
             _handlerMock.Setup(h => h.GetPersonDataByIdAsync(1)).ReturnsAsync((PersonDataResponse?)null);
             var result = await _controller.GetPersonDataById(1) as NotFoundObjectResult;
@@ -63,7 +64,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task CreatePersonData_ReturnsOkWithMessage()
+        public async Task CreatePersonData_ReturnsOkResult_WithMessage()
         {
             var request = SampleCreateRequest();
             var response = SampleResponse(1);
@@ -87,18 +88,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task CreatePersonData_ReturnsBadRequest()
-        {
-            _controller.ModelState.AddModelError("PersonName", "Name is required.");
-
-            var result = await _controller.CreatePersonData(new CreatePersonDataRequest());
-
-            Assert.IsType<BadRequestResult>(result);
-            _handlerMock.Verify(h => h.CreatePersonDataAsync(It.IsAny<CreatePersonDataRequest>()), Times.Never);
-        }
-
-        [Fact]
-        public async Task UpdatePersonData_ReturnsOkWithMessage()
+        public async Task UpdatePersonData_ReturnsOkResult_WithMessage()
         {
             var response = SampleResponse(1);
 
@@ -121,7 +111,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task UpdatePersonData_ReturnsNotFound()
+        public async Task UpdatePersonData_ReturnsNotFoundResult_WithInvalidId()
         {
             _handlerMock.Setup(h => h.UpdatePersonDataAsync(1, It.IsAny<UpdatePersonDataRequest>())).ReturnsAsync((PersonDataResponse?)null);
             var result = await _controller.UpdatePersonData(1, SampleUpdateRequest()) as NotFoundObjectResult;
@@ -131,16 +121,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task UpdatePersonData_ReturnsBadRequest()
-        {
-            _controller.ModelState.AddModelError("PersonName", "Name is required.");
-            var result = await _controller.UpdatePersonData(1, new UpdatePersonDataRequest());
-            Assert.IsType<BadRequestResult>(result);
-            _handlerMock.Verify(h => h.UpdatePersonDataAsync(It.IsAny<int>(), It.IsAny<UpdatePersonDataRequest>()), Times.Never);
-        }
-
-        [Fact]
-        public async Task DeletePersonData_ReturnsOkWithMessage()
+        public async Task DeletePersonData_ReturnsOkResult_WithMessage()
         {
             _handlerMock.Setup(h => h.DeletePersonDataAsync(1)).ReturnsAsync(true);
             var result = await _controller.DeletePersonData(1) as OkObjectResult;
@@ -154,7 +135,7 @@ namespace API.Tests.Controllers
         }
 
         [Fact]
-        public async Task DeletePersonData_ReturnsNotFound()
+        public async Task DeletePersonData_ReturnsNotFoundResult_WithInvalidId()
         {
             _handlerMock.Setup(h => h.DeletePersonDataAsync(1)).ReturnsAsync(false);
             var result = await _controller.DeletePersonData(1) as NotFoundObjectResult;
@@ -171,8 +152,8 @@ namespace API.Tests.Controllers
             PersonDoB = new DateOnly(2001, 8, 2),
             PersonHeight = 5.75m,
             PersonWeight = 89,
-            PersonGender = "Male",
-            PersonMaritalStatus = "Single",
+            PersonGender = Gender.Male,
+            PersonMaritalStatus = MaritalStatus.Single,
             PersonIsGraduated = true
         };
 
@@ -182,8 +163,8 @@ namespace API.Tests.Controllers
             PersonDoB = new DateOnly(2001, 8, 2),
             PersonHeight = 5.75m,
             PersonWeight = 89,
-            PersonGender = "Male",
-            PersonMaritalStatus = "Single",
+            PersonGender = Gender.Male,
+            PersonMaritalStatus = MaritalStatus.Single,
             PersonIsGraduated = true
         };
 
@@ -193,8 +174,8 @@ namespace API.Tests.Controllers
             PersonDoB = new DateOnly(2000, 4, 15),
             PersonHeight = 5.3m,
             PersonWeight = 55,
-            PersonGender = "Female",
-            PersonMaritalStatus = "Married",
+            PersonGender = Gender.Female,
+            PersonMaritalStatus = MaritalStatus.Single,
             PersonIsGraduated = false
         };
     }

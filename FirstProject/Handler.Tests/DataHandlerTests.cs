@@ -1,4 +1,5 @@
-﻿using DTO;
+﻿using Aggregator.Enums;
+using DTO;
 using DTO.Request;
 using FirstProject.Models;
 using FirstProject.Repositories.Interfaces;
@@ -18,10 +19,16 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task GetAllPersonDataAsync_ReturnsDataList()
+        public async Task GetAllPersonDataAsync_RepoReturnsData_ReturnsDataList()
         {
             var datalist = new List<PersonData> { SampleEntity(1), SampleEntity(2) };
-            _repoMock.Setup(r => r.GetAllDataAsync(It.IsAny<PersonDataFilterDto>())).ReturnsAsync(datalist);
+            _repoMock.Setup(r => r.GetAllDataAsync(
+                It.IsAny<string?>(),
+                It.IsAny<Gender?>(),
+                It.IsAny<MaritalStatus?>(),
+                It.IsAny<bool?>(),
+                It.IsAny<int>(),
+                It.IsAny<int>())).ReturnsAsync(datalist);
 
             var result = (await _handler.GetAllPersonDataAsync(DefaultFilter())).ToList();
 
@@ -30,9 +37,15 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task GetAllPersonDataAsync_ReturnsEmptyList()
+        public async Task GetAllPersonDataAsync_RepoIsEmpty_ReturnsEmptyList()
         {
-            _repoMock.Setup(r => r.GetAllDataAsync(It.IsAny<PersonDataFilterDto>())).ReturnsAsync(new List<PersonData>());
+            _repoMock.Setup(r => r.GetAllDataAsync(
+                It.IsAny<string?>(),
+                It.IsAny<Gender?>(),
+                It.IsAny<MaritalStatus?>(),
+                It.IsAny<bool?>(),
+                It.IsAny<int>(),
+                It.IsAny<int>())).ReturnsAsync(new List<PersonData>());
 
             var result = (await _handler.GetAllPersonDataAsync(DefaultFilter())).ToList();
 
@@ -41,9 +54,15 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task GetAllPersonDataAsync_RepoThrowsException()
+        public async Task GetAllPersonDataAsync_RepoThrowsException_ThrowsApplicationException()
         {
-            _repoMock.Setup(r => r.GetAllDataAsync(It.IsAny<PersonDataFilterDto>())).ThrowsAsync(new Exception("Database error"));
+            _repoMock.Setup(r => r.GetAllDataAsync(
+                It.IsAny<string?>(),
+                It.IsAny<Gender?>(),
+                It.IsAny<MaritalStatus?>(),
+                It.IsAny<bool?>(),
+                It.IsAny<int>(),
+                It.IsAny<int>())).ThrowsAsync(new Exception("Database error"));
 
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.GetAllPersonDataAsync(DefaultFilter()));
 
@@ -51,7 +70,7 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task GetPersonDataByIdAsync_ReturnsData()
+        public async Task GetPersonDataByIdAsync_IdExists_ReturnsData()
         {
             var entity = SampleEntity(1);
             _repoMock.Setup(r => r.GetDataByIdAsync(1)).ReturnsAsync(entity);
@@ -64,7 +83,7 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task GetPersonDataByIdAsync_ReturnsNull()
+        public async Task GetPersonDataByIdAsync_IdDoesNotExist_ReturnsNull()
         {
             _repoMock.Setup(r => r.GetDataByIdAsync(It.IsAny<int>())).ReturnsAsync((PersonData?)null);
 
@@ -74,7 +93,7 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task GetPersonDataByIdAsync_RepoThrowsException()
+        public async Task GetPersonDataByIdAsync_RepoThrowsException_ThrowsApplicationException()
         {
             _repoMock.Setup(r => r.GetDataByIdAsync(It.IsAny<int>())).ThrowsAsync(new Exception("Database error"));
 
@@ -84,7 +103,7 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task CreatePersonDataAsync_ReturnsCreatedData()
+        public async Task CreatePersonDataAsync_ValidRequest_ReturnsCreatedData()
         {
             var request = SampleCreateRequest();
             var entity = SampleEntity(1);
@@ -98,7 +117,7 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task CreatePersonDataAsync_RepoThrowsException()
+        public async Task CreatePersonDataAsync_RepoThrowsException_ThrowsApplicationException()
         {
             var request = SampleCreateRequest();
             _repoMock.Setup(r => r.CreateDataAsync(It.IsAny<PersonData>())).ThrowsAsync(new Exception("Database error"));
@@ -109,21 +128,21 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task UpdatePersonDataAsync_ReturnsUpdatedData()
+        public async Task UpdatePersonDataAsync_IdExists_ReturnsUpdatedData()
         {
             var request = SampleUpdateRequest();
             var entity = SampleEntity(1);
             _repoMock.Setup(r => r.GetDataByIdAsync(1)).ReturnsAsync(entity);
-            _repoMock.Setup(r => r.UpdateDataAsync(entity, request))
-                .Callback<PersonData, UpdatePersonDataRequest>((e, dto) =>
+            _repoMock.Setup(r => r.UpdateDataAsync(entity))
+                .Callback<PersonData>(e =>
                 {
-                    e.Name = dto.PersonName;
-                    e.DateOfBirth = dto.PersonDoB;
-                    e.HeightInFeet = dto.PersonHeight;
-                    e.WeightInKg = dto.PersonWeight;
-                    e.Gender = dto.PersonGender;
-                    e.IsGraduated = dto.PersonIsGraduated;
-                    e.MaritalStatus = dto.PersonMaritalStatus;  
+                    e.Name = request.PersonName;
+                    e.DateOfBirth = request.PersonDoB;
+                    e.HeightInFeet = request.PersonHeight;
+                    e.WeightInKg = request.PersonWeight;
+                    e.Gender = request.PersonGender;
+                    e.IsGraduated = request.PersonIsGraduated;
+                    e.MaritalStatus = request.PersonMaritalStatus;
                 }).Returns(Task.CompletedTask);
 
             var result = await _handler.UpdatePersonDataAsync(1, request);
@@ -132,11 +151,11 @@ namespace Handler.Tests
             Assert.Equal(entity.Id, result.PersonId);
             Assert.Equal(entity.Name, result.PersonName);
 
-            _repoMock.Verify(r => r.UpdateDataAsync(entity, request), Times.Once);
+            _repoMock.Verify(r => r.UpdateDataAsync(entity), Times.Once);
         }
 
         [Fact]
-        public async Task UpdatePersonDataAsync_ReturnsNull()
+        public async Task UpdatePersonDataAsync_IdDoesNotExist_ReturnsNull()
         {
             var request = SampleUpdateRequest();
             _repoMock.Setup(r => r.GetDataByIdAsync(It.IsAny<int>())).ReturnsAsync((PersonData?)null);
@@ -145,18 +164,18 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task UpdatePersonDataAsync_RepoThrowsException()
+        public async Task UpdatePersonDataAsync_RepoThrowsException_ThrowsApplicationException()
         {
             var request = SampleUpdateRequest();
             var entity = SampleEntity(1);
             _repoMock.Setup(r => r.GetDataByIdAsync(1)).ReturnsAsync(entity);
-            _repoMock.Setup(r => r.UpdateDataAsync(entity, request)).ThrowsAsync(new Exception("Database error"));
+            _repoMock.Setup(r => r.UpdateDataAsync(entity)).ThrowsAsync(new Exception("Database error"));
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.UpdatePersonDataAsync(1, request));
             Assert.Contains("Failed to update person data", ex.Message);
         }
 
         [Fact]
-        public async Task DeletePersonDataAsync_ReturnsTrue()
+        public async Task DeletePersonDataAsync_IdExists_ReturnsTrue()
         {
             var entity = SampleEntity(1);
             _repoMock.Setup(r => r.GetDataByIdAsync(1)).ReturnsAsync(entity);
@@ -167,7 +186,7 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task DeletePersonDataAsync_ReturnsFalse()
+        public async Task DeletePersonDataAsync_IdDoesNotExist_ReturnsFalse()
         {
             _repoMock.Setup(r => r.GetDataByIdAsync(It.IsAny<int>())).ReturnsAsync((PersonData?)null);
             var result = await _handler.DeletePersonDataAsync(1);
@@ -175,7 +194,7 @@ namespace Handler.Tests
         }
 
         [Fact]
-        public async Task DeletePersonDataAsync_RepoThrowsException()
+        public async Task DeletePersonDataAsync_RepoThrowsException_ThrowsApplicationException()
         {
             var entity = SampleEntity(1);
             _repoMock.Setup(r => r.GetDataByIdAsync(1)).ReturnsAsync(entity);
@@ -193,8 +212,8 @@ namespace Handler.Tests
             DateOfBirth = new DateOnly(2001, 8, 2),
             HeightInFeet = 5.75m,
             WeightInKg = 89,
-            Gender = "Male",
-            MaritalStatus = "Single",
+            Gender = Gender.Male,
+            MaritalStatus = MaritalStatus.Single,
             IsGraduated = true,
             IsDeleted = false
         };
@@ -205,8 +224,8 @@ namespace Handler.Tests
             PersonDoB = new DateOnly(2001, 8, 2),
             PersonHeight = 5.75m,
             PersonWeight = 89,
-            PersonGender = "Male",
-            PersonMaritalStatus = "Single",
+            PersonGender = Gender.Male,
+            PersonMaritalStatus = MaritalStatus.Single,
             PersonIsGraduated = true
         };
 
@@ -216,8 +235,8 @@ namespace Handler.Tests
             PersonDoB = new DateOnly(2000, 4, 15),
             PersonHeight = 5.3m,
             PersonWeight = 55,
-            PersonGender = "Female",
-            PersonMaritalStatus = "Married",
+            PersonGender = Gender.Female,
+            PersonMaritalStatus = MaritalStatus.Married,
             PersonIsGraduated = false
         };
 
