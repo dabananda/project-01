@@ -29,7 +29,8 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddScoped<IDataHandler, DataHandler>();
+builder.Services.AddHandlers();
+
 builder.Services.AddScoped<IDataRepo, DataRepo>();
 
 var app = builder.Build();

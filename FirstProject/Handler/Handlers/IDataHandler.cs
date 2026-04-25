@@ -2,7 +2,7 @@
 using DTO.Request;
 using DTO.Response;
 
-namespace Handler
+namespace Handler.Handlers
 {
     public interface IDataHandler
     {

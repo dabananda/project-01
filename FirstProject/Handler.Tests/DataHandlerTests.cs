@@ -3,6 +3,7 @@ using DTO;
 using DTO.Request;
 using FirstProject.Models;
 using FirstProject.Repositories.Interfaces;
+using Handler.Handlers;
 using Moq;
 
 namespace Handler.Tests

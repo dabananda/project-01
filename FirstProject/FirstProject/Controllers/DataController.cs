@@ -1,6 +1,6 @@
 ﻿using DTO;
 using DTO.Request;
-using Handler;
+using Handler.Collections;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FirstProject.Controllers
@@ -9,23 +9,23 @@ namespace FirstProject.Controllers
     [ApiController]
     public class DataController : ControllerBase
     {
-        private readonly IDataHandler _dataHandler;
+        private readonly IHandlerCollection _handlers;
 
-        public DataController(IDataHandler dataHandler)
+        public DataController(IHandlerCollection handlers)
         {
-            _dataHandler = dataHandler;
+            _handlers = handlers;
         }
 
         [HttpGet("GetAllPersonsData")]
         public async Task<IActionResult> GetAllPersonsData([FromQuery] PersonDataFilterDto dto)
         {
-            return Ok(await _dataHandler.GetAllPersonDataAsync(dto));
+            return Ok(await _handlers.Data.GetAllPersonDataAsync(dto));
         }
 
         [HttpGet("GetPersonDataById/{id}")]
         public async Task<IActionResult> GetPersonDataById([FromRoute] int id)
         {
-            var resultDto = await _dataHandler.GetPersonDataByIdAsync(id);
+            var resultDto = await _handlers.Data.GetPersonDataByIdAsync(id);
             if (resultDto == null)
             {
                 return NotFound($"Person data with id: {id} does not exist.");
@@ -36,7 +36,7 @@ namespace FirstProject.Controllers
         [HttpPost("CreatePersonData")]
         public async Task<IActionResult> CreatePersonData([FromBody] CreatePersonDataRequest dto)
         {
-            var responseDto = await _dataHandler.CreatePersonDataAsync(dto);
+            var responseDto = await _handlers.Data.CreatePersonDataAsync(dto);
             return Ok(new
             {
                 message = "Data created successfully.",
@@ -47,7 +47,7 @@ namespace FirstProject.Controllers
         [HttpPut("UpdatePersonData/{id}")]
         public async Task<IActionResult> UpdatePersonData([FromRoute] int id, [FromBody] UpdatePersonDataRequest dto)
         {
-            var responseDto = await _dataHandler.UpdatePersonDataAsync(id, dto);
+            var responseDto = await _handlers.Data.UpdatePersonDataAsync(id, dto);
             if (responseDto == null)
             {
                 return NotFound($"Person data with id: {id} does not exist.");
@@ -62,7 +62,7 @@ namespace FirstProject.Controllers
         [HttpDelete("DeletePersonData/{id}")]
         public async Task<IActionResult> DeletePersonData([FromRoute] int id)
         {
-            var response = await _dataHandler.DeletePersonDataAsync(id);
+            var response = await _handlers.Data.DeletePersonDataAsync(id);
             if (response == false)
             {
                 return NotFound($"Person data with id: {id} does not exist.");

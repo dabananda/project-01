@@ -4,7 +4,7 @@ using DTO.Request;
 using DTO.Response;
 using FirstProject.Repositories.Interfaces;
 
-namespace Handler
+namespace Handler.Handlers
 {
     public class DataHandler : IDataHandler
     {

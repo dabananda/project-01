@@ -3,7 +3,7 @@ using DTO;
 using DTO.Request;
 using DTO.Response;
 using FirstProject.Controllers;
-using Handler;
+using Handler.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -17,7 +17,7 @@ namespace API.Tests.Controllers
         public DataControllerTests()
         {
             _handlerMock = new Mock<IDataHandler>();
-            _controller = new DataController(_handlerMock.Object);
+            //_controller = new DataController(_handlerMock.Object);
         }
 
         [Fact]
