@@ -4,6 +4,7 @@ using FirstProject.Repositories.Interfaces;
 using Handler;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +31,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHandlers();
-
-builder.Services.AddScoped<IDataRepo, DataRepo>();
+builder.Services.AddRepositories();
 
 var app = builder.Build();
 
