@@ -1,4 +1,5 @@
-﻿using Handler.Collections;
+﻿using Dapper;
+using Handler.Collections;
 using Handler.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ namespace Handler
         {
             services.AddScoped<IDataHandler, DataHandler>();
             services.AddScoped<IHandlerCollection, HandlerCollection>();
+            SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
 
             return services;
         }

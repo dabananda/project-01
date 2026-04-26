@@ -1,31 +1,40 @@
 ﻿using Aggregator.Enums;
-using FirstProject.Data;
+using Dapper;
 using FirstProject.Models;
 using FirstProject.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+using System.Text;
 
 namespace FirstProject.Repositories
 {
     public class DataRepo : IDataRepo
     {
-        private readonly AppDbContext _context;
+        private readonly string _connectionString;
 
-        public DataRepo(AppDbContext context)
+        public DataRepo(IConfiguration config)
         {
-            _context = context;
+            _connectionString = config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("Db Connection failed");
         }
+
+        private IDbConnection CreateConnection() => new SqlConnection(_connectionString);
 
         public async Task<PersonData> CreateDataAsync(PersonData data)
         {
             try
             {
-                await _context.PersonDatas.AddAsync(data);
-                await _context.SaveChangesAsync();
+                using var connection = CreateConnection();
+                var query = "INSERT INTO PersonDatas (Name, DateOfBirth, HeightInFeet, WeightInKg, Gender, MaritalStatus, IsGraduated, IsDeleted) " +
+                            "VALUES (@Name, @DateOfBirth, @HeightInFeet, @WeightInKg, @Gender, @MaritalStatus, @IsGraduated, 0); " +
+                            "SELECT CAST(SCOPE_IDENTITY() as int)";
+                var id = await connection.QuerySingleAsync<int>(query, data);
+                data.Id = id;
                 return data;
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to create new person data on database", ex);
+                throw new Exception("Failed to create person data on database", ex);
             }
         }
 
@@ -33,8 +42,9 @@ namespace FirstProject.Repositories
         {
             try
             {
-                data.IsDeleted = true;
-                await _context.SaveChangesAsync();
+                using var connection = CreateConnection();
+                var query = "UPDATE PersonDatas SET IsDeleted = 1 WHERE Id = @Id";
+                await connection.ExecuteAsync(query, new { data.Id });
             }
             catch (Exception ex)
             {
@@ -46,30 +56,41 @@ namespace FirstProject.Repositories
         {
             try
             {
-                var datas = _context.PersonDatas.AsNoTracking().Where(x => x.IsDeleted == false).OrderByDescending(x => x.Id).AsQueryable();
-
+                using var connection = CreateConnection();
+                var sql = new StringBuilder("SELECT * FROM PersonDatas WHERE IsDeleted = 0");
+                
+                var parameters = new DynamicParameters();
                 if (!string.IsNullOrEmpty(name))
                 {
-                    datas = datas.Where(x => x.Name.Contains(name));
+                    sql.Append(" AND Name LIKE @Name");
+                    parameters.Add("Name", $"%{name}%");
                 }
 
                 if (gender.HasValue)
                 {
-                    datas = datas.Where(x => x.Gender == gender);
+                    sql.Append(" AND Gender = @Gender");
+                    parameters.Add("Gender", gender.Value.ToString());
                 }
 
                 if (maritalStatus.HasValue)
                 {
-                    datas = datas.Where(x => x.MaritalStatus == maritalStatus);
+                    sql.Append(" AND MaritalStatus = @MaritalStatus");
+                    parameters.Add("MaritalStatus", maritalStatus.Value.ToString());
                 }
 
                 if (isGraduated.HasValue)
                 {
-                    datas = datas.Where(x => x.IsGraduated == isGraduated.Value);
+                    sql.Append(" AND IsGraduated = @IsGraduated");
+                    parameters.Add("IsGraduated", isGraduated.Value);
                 }
 
-                var skipRes = (pageNumber - 1) * pageSize;
-                return await datas.Skip(skipRes).Take(pageSize).ToListAsync();
+                var skip = (pageNumber - 1) * pageSize;
+                sql.Append(" ORDER BY Id DESC OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY;");
+                parameters.Add("Skip", skip);
+                parameters.Add("Take", pageSize);
+
+                var result = await connection.QueryAsync<PersonData>(sql.ToString(), parameters);
+                return result.ToList();
             }
             catch (Exception ex)
             {
@@ -81,7 +102,9 @@ namespace FirstProject.Repositories
         {
             try
             {
-                return await _context.PersonDatas.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+                using var connection = CreateConnection();
+                var query = "SELECT * FROM PersonDatas WHERE Id = @Id AND IsDeleted = 0";
+                return await connection.QuerySingleOrDefaultAsync<PersonData>(query, new { Id = id });
             }
             catch (Exception ex)
             {
@@ -93,7 +116,9 @@ namespace FirstProject.Repositories
         {
             try
             {
-                await _context.SaveChangesAsync();
+                using var connection = CreateConnection();
+                var query = "UPDATE PersonDatas SET Name = @Name, DateOfBirth = @DateOfBirth, HeightInFeet = @HeightInFeet, WeightInKg = @WeightInKg, Gender = @Gender, MaritalStatus = @MaritalStatus, IsGraduated = @IsGraduated WHERE Id = @Id";
+                await connection.ExecuteAsync(query, entity);
             }
             catch (Exception ex)
             {
