@@ -1,10 +1,11 @@
+using DTO.Validators.PersonData;
 using FirstProject.Data;
-using FirstProject.Repositories;
-using FirstProject.Repositories.Interfaces;
+using FluentValidation;
 using Handler;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,9 @@ builder.Services.AddCors(options =>
                   .AllowCredentials();
         });
 });
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreatePersonDataRequestValidator>();
 
 builder.Services.AddHandlers();
 builder.Services.AddRepositories();
